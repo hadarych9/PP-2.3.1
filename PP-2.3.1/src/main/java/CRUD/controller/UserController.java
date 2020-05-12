@@ -39,17 +39,17 @@ public class UserController {
         if(service.doesUserNotExist(name)){
             if(age != null) {
                 if(name == null | password == null) {
-                    result = "Please fill in all fields";
+                    result = "Пожалуйста, заполните все поля";
                 } else if(!name.equals(name.replaceAll("[^\\da-zA-Zа-яёА-ЯЁ]", ""))){
-                    result = "You need to use only letters and digits for login";
+                    result = "Для ввода логина необходимо использовать только буквы или цифры";
                 } else if(age <= 0) {
-                    result = "Age must be more then 0";
+                    result = "Возраст должен быть больше нуля";
                 } else {
                     service.addUser(new User(name, password, age));
-                    result = "User " + name + " is added!";
+                    result = "Пользователь " + name + " добавлен(а)!";
                 }
-            } else result = "Please fill in all fields";
-        } else result =  "User already exists";
+            } else result = "Пожалуйста, заполните все поля";
+        } else result =  "Пользователь с таким именем уже существует";
         modelMap.addAttribute("result", result);
         return "redirect:/main";
     }
@@ -61,27 +61,27 @@ public class UserController {
             modelMap.addAttribute("user", user);
             return null;
         } else {
-            modelMap.addAttribute("result", "No such user exists");
+            modelMap.addAttribute("result", "Такого пользователя не существует");
             return "redirect:/main";
         }
     }
 
     @PostMapping("/update")
     public String updateUser(ModelMap modelMap, @RequestParam("name")String name, @RequestParam("password")String password, @RequestParam("age")Long age){
-        String success = "Update successful!";
+        String success = "Изменения внесены!";
         String result = success;
         User user = service.getByName(name);
         if((name == null | name.equals(user.getName()))
                 & (password == null | password.equals(user.getPassword()))
                 & (age == null | age == user.getAge())){
-            result = "No changes made";
+            result = "Изменения не внесены";
         } else if(!name.equals(name.replaceAll("[^\\da-zA-Zа-яёА-ЯЁ]", ""))) {
             name = user.getName();
-            result = "You need to use only letters and digits for login";
+            result = "Для ввода логина необходимо использовать только буквы или цифры";
         }
         if(!service.doesUserNotExist(name) & !name.equals(user.getName())) {
             name = user.getName();
-            result = "User already exists";
+            result = "Пользователь с таким именем уже существует";
         } else if(name.equals("")) {
             name = user.getName();
         }
@@ -97,14 +97,14 @@ public class UserController {
         User user = service.getById(id);
         String result;
         if(user == null) {
-            modelMap.addAttribute("result", "User doesn't exist");
+            modelMap.addAttribute("result", "Такого пользователя не существует");
             return "redirect:/main";
         }
         int x = service.deleteUser(id);
         if (x > 0){
-            result = user.getName()+" is deleted!";
+            result = "Удаление " + user.getName() + " успешно проведено!";
         } else {
-             result = "Delete failed";
+             result = "Удаление неудачно";
         }
         modelMap.addAttribute("result", result);
         return "redirect:/main";
@@ -113,7 +113,7 @@ public class UserController {
     @GetMapping("/drop")
     public String dropTable(ModelMap modelMap){
         service.dropTable();
-        modelMap.addAttribute("result", "Table is cleared!");
+        modelMap.addAttribute("result", "Очистка базы успешно проведена!");
         return "redirect:/main";
     }
 }

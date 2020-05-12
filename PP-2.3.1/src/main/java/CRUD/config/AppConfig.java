@@ -13,9 +13,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.server.handler.FilteringWebHandler;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,7 +24,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 import javax.sql.DataSource;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
@@ -48,20 +44,8 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @RequestMapping("/*")
-    public CharacterEncodingFilter characterEncodingFilter() {
-        CharacterEncodingFilter encodingFilter = new CharacterEncodingFilter();
-        encodingFilter.setEncoding("UTF-8");
-        encodingFilter.setForceEncoding(true);
-        return encodingFilter;
-    }
-
-    @Bean
-    @RequestMapping("/*")
-    public StringHttpMessageConverter stringHttpMessageConverter(){
-        StringHttpMessageConverter converter = new StringHttpMessageConverter();
-        converter.setDefaultCharset(StandardCharsets.UTF_8);
-        return converter;
+    public StringHttpMessageConverter stringHttpMessageConverter() {
+        return new StringHttpMessageConverter(StandardCharsets.UTF_8);
     }
 
     @Override
